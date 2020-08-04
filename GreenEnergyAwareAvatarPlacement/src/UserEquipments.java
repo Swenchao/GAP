@@ -9,14 +9,14 @@ public class UserEquipments {
     private int id;
     /**用户可用微云列表*/
     private List<CloudLets> cloudLetsList;
-    /** 用户avatr所在微云*/
+    /**用户avatr所在微云*/
     private CloudLets cloudLets;
     /**Avatar*/
     private Avatar avatar;
-    /**横坐标*/
-    private int x;
-    /**横坐标*/
-    private int y;
+    /**所在坐标*/
+    private Float[] location = new Float[2];
+    /**目的地坐标*/
+    private Float[] desLocation = new Float[2];
 
     public int getId() {
         return id;
@@ -42,20 +42,20 @@ public class UserEquipments {
         this.cloudLets = cloudLets;
     }
 
-    public int getX() {
-        return x;
+    public Float[] getLocation() {
+        return location;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setLocation(Float[] location) {
+        this.location = location;
     }
 
-    public int getY() {
-        return y;
+    public Float[] getDesLocation() {
+        return desLocation;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setDesLocation(Float[] desLocation) {
+        this.desLocation = desLocation;
     }
 
     public Avatar getAvatar() {

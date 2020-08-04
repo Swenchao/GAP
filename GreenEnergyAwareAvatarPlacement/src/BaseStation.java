@@ -8,6 +8,17 @@ public class BaseStation {
     /**微云到基站延迟*/
     private int bsToclDelay;
 
+    /**农村还是城市 0:农村 1：城市**/
+    private boolean isCity;
+
+    public boolean isCity() {
+        return isCity;
+    }
+
+    public void setCity(boolean city) {
+        isCity = city;
+    }
+
     public int getBaseStationId() {
         return baseStationId;
     }
