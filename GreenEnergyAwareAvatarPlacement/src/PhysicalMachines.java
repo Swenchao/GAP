@@ -10,8 +10,13 @@ public class PhysicalMachines {
 //    private int pIdle;
 //    // cpu利用率
 //    private float cpuUtilization;
-    // pm承载 avatar数量
+
+    /**
+     * pm承载 avatar数量
+     */
     private static int avatarNum = 5;
-    // PM承载的avatar
+    /**
+     * PM承载的avatar
+     */
     private List<Avatar> avatarList;
 }

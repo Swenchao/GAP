@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -116,4 +117,18 @@ public class CloudLets {
         this.avatarNumNow = avatarNumNow;
     }
 
+    @Override
+    public String toString() {
+        return "CloudLets{" +
+                "id=" + id +
+                ", avatarNumNow=" + avatarNumNow +
+                ", baseStation=" + baseStation +
+                ", greenEng=" + greenEng +
+                ", pmList=" + pmList +
+                ", avatarList=" + avatarList +
+                ", profit=" + profit +
+                ", x=" + Arrays.toString(x) +
+                ", y=" + Arrays.toString(y) +
+                '}';
+    }
 }

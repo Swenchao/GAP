@@ -3,112 +3,186 @@ import java.util.*;
 
 
 public class GAP {
-    public static void main(String[] args) {
-        List<UserEquipments> userEquipmentsList = new ArrayList<UserEquipments>(1000);
-        List<CloudLets> cloudLetsList = new ArrayList<CloudLets>(16);
+    /**根据区域存放微云，方便后面avatar添加*/
+    public static Map<String, CloudLets> cloudLetsMap = new HashMap<>();
 
-        // 根据区域存放微云，方便后面avatar添加
-        Map<String, CloudLets> cloudLetsMap = new HashMap<>();
-        int id = 0;
-        int bsId = 0;
+    public static void main(String[] args) {
+
+        // CloudLets数量
+        int numCloudLets = 16;
+        List<CloudLets> cloudLetsList = initCloudLets(numCloudLets);
+//        System.out.println(cloudLetsMap);
+//        for (CloudLets cloudLets : cloudLetsList) {
+//            System.out.println("===============================");
+//            System.out.println(cloudLets.getId());
+//            System.out.println(cloudLets.getX()[0]);
+//            System.out.println(cloudLets.getX()[1]);
+//            System.out.println("---------------------------------");
+//            System.out.println(cloudLets.getY()[0]);
+//            System.out.println(cloudLets.getY()[1]);
+//        }
+
+        /**UserEquipments数量*/
+        int numUE = 1000;
+        List<UserEquipments> userEquipmentsList = initUserEquipments(numUE);
+//        for (UserEquipments userEquipments : userEquipmentsList){
+//            System.out.println("----------------------------");
+//            System.out.println(userEquipments.getCloudLets());
+//        }
+
+    }
+
+    /**
+     * 初始化微云
+     * @param num
+     * @return
+     */
+    public static List<CloudLets> initCloudLets(int num){
+        List<CloudLets> cloudLetsList = new ArrayList<>();
 
         // 微云横坐标范围
         int xLeft = 0;
         // 微云纵坐标范围
         int yLeft = 0;
 
-        for (CloudLets cloudLets : cloudLetsList){
-            cloudLets.setId(id++);
+        for (int i = 0 ; i < num ; ++i) {
+
+            // 坐标赋值（X Y）
+            Integer[] tempX = new Integer[2];
+            Integer[] tempY = new Integer[2];
+
+            CloudLets cloudLets = new CloudLets();
+            cloudLets.setId(i);
             BaseStation bs = new BaseStation();
-            bs.setBaseStationId(bsId++);
+            bs.setBaseStationId(i);
             bs.setCloudLets(cloudLets);
             cloudLets.setBaseStation(bs);
-            if (id == 6 || id ==7 || id == 10 || id == 11){
+
+            // 区分城市还是农村
+            if (i == 5 || i == 6 || i == 9 || i == 10) {
                 bs.setCity(true);
-            }
-            else{
+            } else {
                 bs.setCity(false);
             }
+
             // 微云区域赋值
-            if (id % 4 != 0 ) {
-                Integer[] temp = new Integer[2];
-                temp[0] = xLeft;
-                temp[1] = xLeft + 2;
-                cloudLets.setX(temp);
+            if ((i+1) % 4 != 0) {
+                tempX[0] = xLeft;
+                tempX[1] = xLeft + 2;
+                cloudLets.setX(tempX);
                 String key = xLeft + "";
                 xLeft += 2;
-                temp[0] = yLeft;
-                temp[1] = yLeft + 2;
-                cloudLets.setY(temp);
+                tempY[0] = yLeft;
+                tempY[1] = yLeft + 2;
+                cloudLets.setY(tempY);
                 key = key + yLeft + "";
+                cloudLets.setAvatarNumNow(0);
                 cloudLetsMap.put(key, cloudLets);
-            }
-            else {
-                Integer[] temp = new Integer[2];
-                temp[0] = xLeft;
-                temp[1] = xLeft + 2;
-                cloudLets.setX(temp);
+            } else {
+                tempX[0] = xLeft;
+                tempX[1] = xLeft + 2;
+                cloudLets.setX(tempX);
                 String key = xLeft + "";
-                temp[0] = yLeft;
-                temp[1] = yLeft + 2;
-                cloudLets.setY(temp);
+                tempY[0] = yLeft;
+                tempY[1] = yLeft + 2;
+                cloudLets.setY(tempY);
                 key = key + yLeft + "";
+                cloudLets.setAvatarNumNow(0);
                 cloudLetsMap.put(key, cloudLets);
                 xLeft = 0;
                 yLeft += 2;
             }
+            cloudLetsList.add(cloudLets);
         }
-        id = 0;
-        for (UserEquipments userEquipment : userEquipmentsList){
-            Avatar avatar = new Avatar();
-            Random random = new Random();
+        return cloudLetsList;
+    }
 
-            // 用户所在位置
-            float x = Utils.formatNum(Utils.nextFloat(0,8));
-            float y = Utils.formatNum(Utils.nextFloat(0,8));
+    /**
+     * 初始化用户
+     * @param num
+     * @return
+     */
+    public static List<UserEquipments> initUserEquipments(int num){
+        List<UserEquipments> userEquipmentsList = new ArrayList<>();
+        for (int i = 0 ; i < num ; ++i){
+
             Float[] location = new Float[2];
-            location[0] = x;
-            location[1] = y;
-            userEquipment.setId(id++);
-            userEquipment.setLocation(location);
-            float xTemp = x;
-            float yTemp = y;
-            if(x % 2 != 0){
-                xTemp = x - 1;
-            }
-            if(y % 2 != 0){
-                yTemp = y - 1;
-            }
-            String[] keyList = new String[5];
-            keyList[0] = xTemp + "" + yTemp + "";
-            /**未修正*/
-//            int x1 = xTemp + 2;
-//            int y1 = yTemp + 2;
-            int x1 = 2;
-            int y1 = 2;
-            keyList[1] = x1 + "" + yTemp + "";
-            x1 -= 4;
-            keyList[2] = x1 + "" + yTemp + "";
-            keyList[3] = xTemp + "" + y1 + "";
-            y1 -= 4;
-            keyList[4] = xTemp + "" + y1 + "";
-            for (String index : keyList){
-                CloudLets cloudLets = cloudLetsMap.get(index);
-                if(cloudLets.getAvatarNumNow() >= 1){
-//                    cloudLets.getAvatarList().add()
-                }
-            }
-            // 判断微云还能不能放
-//            int available = cloudLets.get
-//            List<CloudLets> cloudLetsListAvailable = new ArrayList<>();
-//
-//            cloudLetsListAvailable.add();
-//            userEquipment.setCloudLets(cloudLets);
-//            cloudLets.se
-        }
-        List<BaseStation> baseStationsList = new ArrayList<BaseStation>();
-        for (BaseStation item : baseStationsList){
+            Float[] desLocation = new Float[2];
+            UserEquipments userEquipments = new UserEquipments();
+            userEquipments.setId(i);
+            Avatar avatar = new Avatar();
 
+            // 用户所在位置(初始位置和终点位置)
+            float xLocation = Utils.formatNum(Utils.nextFloat(0,8));
+            float yLocation = Utils.formatNum(Utils.nextFloat(0,8));
+            float xDesLocation = Utils.formatNum(Utils.nextFloat(0,8));
+            float yDesLocation = Utils.formatNum(Utils.nextFloat(0,8));
+            location[0] = xLocation;
+            location[1] = yLocation;
+            desLocation[0] = xDesLocation;
+            desLocation[1] = yDesLocation;
+            userEquipments.setLocation(location);
+            userEquipments.setDesLocation(desLocation);
+
+            // 查找可用微云
+            findCloudLets(userEquipments);
+
+            userEquipmentsList.add(userEquipments);
         }
+        return userEquipmentsList;
+    }
+
+    /**
+     * 根据 userEquipments 位置获得可用微云
+     * @param userEquipments
+     */
+    public static void findCloudLets(UserEquipments userEquipments){
+        List<CloudLets> cloudLetsList = new ArrayList<>();
+
+        Float[] location = userEquipments.getLocation();
+        float x = location[0];
+        float y = location[1];
+
+        // 获取x范围
+        int xKey = ((int)Math.floor(x/2))*2;
+        int yKey = ((int)Math.floor(y/2))*2;
+
+        if (xKey == 8){
+            xKey = 6;
+        }
+        if (yKey == 8){
+            yKey = 6;
+        }
+
+        // 选择可用微云
+        CloudLets cloudLets = cloudLetsMap.get(xKey + "" + yKey + "");
+        int num = cloudLets.getAvatarNumNow();
+        if (num < CloudLets.getAvatarNum()){
+            cloudLets.setAvatarNumNow(num+1);
+            userEquipments.setCloudLets(cloudLets);
+        }
+
+        int temp;
+        if (xKey - 2 > 0){
+            temp = xKey - 2;
+            CloudLets cloudLetsAvaliable = cloudLetsMap.get(temp + "" + yKey + "");
+            cloudLetsList.add(cloudLetsAvaliable);
+        }
+        if (yKey - 2 > 0){
+            temp = yKey - 2;
+            CloudLets cloudLetsAvaliable = cloudLetsMap.get(xKey + "" + temp + "");
+            cloudLetsList.add(cloudLetsAvaliable);
+        }
+        if (xKey + 2 <= 8){
+            temp = xKey + 2;
+            CloudLets cloudLetsAvaliable = cloudLetsMap.get(temp + "" + yKey + "");
+            cloudLetsList.add(cloudLetsAvaliable);
+        }
+        if (yKey + 2 <= 8){
+            temp = yKey + 2;
+            CloudLets cloudLetsAvaliable = cloudLetsMap.get(xKey + "" + temp + "");
+            cloudLetsList.add(cloudLetsAvaliable);
+        }
+        userEquipments.setCloudLetsList(cloudLetsList);
     }
 }
